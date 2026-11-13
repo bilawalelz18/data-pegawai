@@ -55,12 +55,19 @@ function validasiFormLogin(event) {
 }
 
 function validasiFormProfil(event) {
+  const namaEl = document.getElementById("nama_admin");
+  const nama = namaEl ? namaEl.value.trim() : "";
   const username = document.getElementById("username_admin").value.trim();
   const email = document.getElementById("email_admin").value.trim();
   const jabatan = document.getElementById("jabatan_admin").value.trim();
   const inputFoto = document.getElementById("foto_admin");
   const polaEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+  if (nama === "") {
+    event.preventDefault();
+    tampilkanPesanValidasi("Nama lengkap administrator wajib diisi.");
+    return false;
+  }
   if (username === "") {
     event.preventDefault();
     tampilkanPesanValidasi("Username wajib diisi.");

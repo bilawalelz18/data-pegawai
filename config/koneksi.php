@@ -39,16 +39,19 @@ function e(?string $teks): string {
 function renderNavbar(string $menuAktif = 'dashboard', string $basePath = ''): void {
     global $pdo;
     $username = $_SESSION['username'] ?? 'admin';
+    $namaUser = $_SESSION['nama_user'] ?? null;
     $fotoUser = $_SESSION['foto_user'] ?? null;
 
-    if (!empty($_SESSION['user_id']) && !isset($_SESSION['foto_user'])) {
-        $stmtU = $pdo->prepare('SELECT username, foto FROM users WHERE id = :id LIMIT 1');
+    if (!empty($_SESSION['user_id']) && (!isset($_SESSION['foto_user']) || empty($namaUser))) {
+        $stmtU = $pdo->prepare('SELECT username, nama, foto FROM users WHERE id = :id LIMIT 1');
         $stmtU->execute(['id' => $_SESSION['user_id']]);
         if ($rowU = $stmtU->fetch()) {
-            $username = $_SESSION['username'] = $rowU['username'];
+            $username = $_SESSION['username']  = $rowU['username'];
+            $namaUser = $_SESSION['nama_user'] = $rowU['nama'] ?: $rowU['username'];
             $fotoUser = $_SESSION['foto_user'] = $rowU['foto'];
         }
     }
+    $namaTampil = $namaUser ?: $username;
 
     $fotoValid = !empty($fotoUser) && is_file(__DIR__ . '/../assets/images/pegawai/' . $fotoUser);
     $aktifDashboard = $menuAktif === 'dashboard' ? 'active' : '';
@@ -101,12 +104,12 @@ function renderNavbar(string $menuAktif = 'dashboard', string $basePath = ''): v
             <div class="sidebar-footer pt-3 border-top border-white border-opacity-10">
                 <a href="<?= $basePath ?>admin.php" class="d-flex align-items-center gap-2 text-white text-decoration-none p-2 rounded-3 sidebar-user-link mb-2">
                     <?php if ($fotoValid): ?>
-                        <img src="<?= $basePath ?>assets/images/pegawai/<?= e($fotoUser) ?>" alt="<?= e($username) ?>" class="avatar-pegawai border-white">
+                        <img src="<?= $basePath ?>assets/images/pegawai/<?= e($fotoUser) ?>" alt="<?= e($namaTampil) ?>" class="avatar-pegawai border-white">
                     <?php else: ?>
                         <span class="avatar-pegawai bg-white text-primary"><i class="bi bi-person-fill"></i></span>
                     <?php endif; ?>
                     <div class="overflow-hidden">
-                        <div class="fw-semibold text-truncate"><?= e($username) ?></div>
+                        <div class="fw-semibold text-truncate"><?= e($namaTampil) ?></div>
                         <div class="small text-white-50 text-truncate">Administrator</div>
                     </div>
                 </a>

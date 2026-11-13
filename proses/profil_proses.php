@@ -8,9 +8,16 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $idAdmin  = (int) $_SESSION['user_id'];
+$nama     = trim($_POST['nama'] ?? '');
 $username = trim($_POST['username'] ?? '');
 $email    = trim($_POST['email'] ?? '');
 $jabatan  = 'Administrator';
+
+if ($nama === '') {
+    $_SESSION['flash_error'] = 'Nama lengkap wajib diisi.';
+    header('Location: ../admin.php');
+    exit;
+}
 
 if ($username === '') {
     $_SESSION['flash_error'] = 'Username wajib diisi.';
@@ -59,7 +66,7 @@ try {
     );
     $stmt->execute([
         'username' => $username,
-        'nama'     => $username,
+        'nama'     => $nama,
         'email'    => $email,
         'jabatan'  => $jabatan,
         'foto'     => $fotoSimpan,
@@ -71,7 +78,7 @@ try {
     }
 
     $_SESSION['username']     = $username;
-    $_SESSION['nama_user']    = $username;
+    $_SESSION['nama_user']    = $nama;
     $_SESSION['foto_user']    = $fotoSimpan;
     $_SESSION['flash_sukses'] = 'Profil administrator berhasil diperbarui.';
 } catch (PDOException $e) {

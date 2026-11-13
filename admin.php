@@ -34,7 +34,7 @@ unset($_SESSION['flash_sukses'], $_SESSION['flash_error']);
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4 fade-in">
         <div>
             <h1 class="h3 fw-bold mb-1">Profil &amp; Pengaturan Akun</h1>
-            <p class="text-secondary mb-0">Kelola foto profil, username, email, dan keamanan kata sandi Anda.</p>
+            <p class="text-secondary mb-0">Kelola foto profil, nama lengkap, username, email, dan keamanan kata sandi Anda.</p>
         </div>
     </div>
 
@@ -71,13 +71,13 @@ unset($_SESSION['flash_sukses'], $_SESSION['flash_error']);
         <div class="d-flex flex-wrap align-items-center gap-3">
             <img id="previewFotoAdmin"
                  src="<?= $fotoAda ? 'assets/images/pegawai/' . e($admin['foto']) : '' ?>"
-                 alt="<?= e($admin['username']) ?>"
+                 alt="<?= e($admin['nama'] ?: $admin['username']) ?>"
                  class="avatar-detail <?= $fotoAda ? '' : 'd-none' ?>">
             <div id="avatarIconAdmin" class="avatar-detail bg-primary bg-opacity-10 text-primary <?= $fotoAda ? 'd-none' : '' ?>">
                 <i class="bi bi-person-badge-fill"></i>
             </div>
             <div>
-                <h2 class="h4 fw-bold mb-1"><?= e($admin['username']) ?></h2>
+                <h2 class="h4 fw-bold mb-1"><?= e($admin['nama'] ?: $admin['username']) ?></h2>
                 <div class="d-flex flex-wrap align-items-center gap-2 text-secondary small">
                     <span class="badge bg-primary bg-opacity-10 text-primary fs-6 fw-normal"><?= e($admin['jabatan']) ?></span>
                     <span>&bull;</span>
@@ -99,6 +99,11 @@ unset($_SESSION['flash_sukses'], $_SESSION['flash_error']);
                         <label for="foto_admin" class="form-label fw-semibold">Foto Profil</label>
                         <input type="file" id="foto_admin" name="foto" class="form-control" accept="image/jpeg,image/png,image/webp">
                         <div class="form-text">Format JPG, PNG, atau WEBP (maks. 2 MB). Kosongkan jika tidak ingin mengganti foto.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="nama_admin" class="form-label fw-semibold">Nama Lengkap <span class="text-danger">*</span></label>
+                        <input type="text" id="nama_admin" name="nama" class="form-control" value="<?= e($admin['nama']) ?>" placeholder="Masukkan nama lengkap" required>
                     </div>
 
                     <div class="mb-3">
